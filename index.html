@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusConnect Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Decorative background only: hidden from assistive tech, frozen under reduced motion -->
+<div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<main>
+  <h1><span class="logo" aria-hidden="true"><span></span><span></span><span></span></span>CampusConnect registration</h1>
+  <p class="intro">Join a student club in four short steps. Use fictional data only. Nothing on this page is sent or saved.</p>
+
+  <!-- Progress indicator: text for screen readers, list for sighted users -->
+  <p class="progress" id="progressText" role="status">Step <span id="stepNum">1</span> of 4: <span id="stepName">Identity</span></p>
+  <ol class="stepper" aria-hidden="true">
+    <li data-step-label="1">Identity</li>
+    <li data-step-label="2">Security</li>
+    <li data-step-label="3">Profile</li>
+    <li data-step-label="4">Review</li>
+  </ol>
+  <div class="track" aria-hidden="true"><span id="progressFill"></span></div>
+
+  <!-- Error summary: filled by validator.js, focused after a failed Next or Submit -->
+  <div role="region" id="error-summary" tabindex="-1" aria-labelledby="error-summary-title" hidden></div>
+
+  <noscript><p>Enable JavaScript to use the four-step registration form.</p></noscript>
+  <form id="regForm" novalidate>
+    <!-- STEP 1: IDENTITY -->
+    <section class="step" data-step="1" aria-labelledby="h-identity">
+      <h2 id="h-identity" tabindex="-1">Identity</h2>
+
+      <div class="field">
+        <label for="fullname">Full name <span class="req">(required)</span></label>
+        <p class="hint" id="fullname_hint">Letters A–Z, spaces, hyphens and apostrophes. At least one letter.</p>
+        <input id="fullname" name="fullname" type="text" autocomplete="name"
+               required maxlength="80"
+               pattern="[A-Za-z' \-]*[A-Za-z][A-Za-z' \-]*"
+               aria-describedby="fullname_hint fullname_err">
+        <p class="field-error" id="fullname_err" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label for="campusEmail">Campus email <span class="req">(required)</span></label>
+        <p class="hint" id="campusEmail_hint">Must end in @student.gsu.edu</p>
+        <input id="campusEmail" name="campusEmail" type="email" autocomplete="email"
+               required maxlength="100"
+               pattern="[^@\s]+@[Ss][Tt][Uu][Dd][Ee][Nn][Tt]\.[Gg][Ss][Uu]\.[Ee][Dd][Uu]"
+               aria-describedby="campusEmail_hint campusEmail_err">
+        <p class="field-error" id="campusEmail_err" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label for="studentId">Fictional student ID <span class="req">(required)</span></label>
+        <p class="hint" id="studentId_hint">Exactly 9 digits, first digit 1–9.</p>
+        <input id="studentId" name="studentId" type="text" inputmode="numeric" autocomplete="off"
+               required minlength="9" maxlength="9" pattern="[1-9][0-9]{8}"
+               aria-describedby="studentId_hint studentId_err">
+        <p class="field-error" id="studentId_err" aria-live="polite"></p>
+      </div>
+
+      <div class="nav">
+        <button type="button" data-next>Next: Security →</button>
+        <button type="button" class="return-review" data-return hidden>Save and return to review</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: SECURITY -->
+    <section class="step" data-step="2" aria-labelledby="h-security">
+      <h2 id="h-security" tabindex="-1">Security</h2>
+
+      <div class="field">
+        <label for="password">Practice password <span class="req">(required)</span></label>
+        <p class="hint" id="password_hint">Practice only. Do not reuse a real password.</p>
+        <input id="password" name="password" type="password" autocomplete="new-password"
+               required minlength="8" maxlength="128"
+               aria-describedby="password_hint pwRules password_err">
+        <ul id="pwRules" class="pw-rules" aria-label="Password requirements">
+          <li data-rule="len"><span class="mark" aria-hidden="true">✗</span> At least 8 characters <span class="state">(Needed)</span></li>
+          <li data-rule="upper"><span class="mark" aria-hidden="true">✗</span> One uppercase letter A–Z <span class="state">(Needed)</span></li>
+          <li data-rule="lower"><span class="mark" aria-hidden="true">✗</span> One lowercase letter a–z <span class="state">(Needed)</span></li>
+          <li data-rule="digit"><span class="mark" aria-hidden="true">✗</span> One digit 0–9 <span class="state">(Needed)</span></li>
+          <li data-rule="symbol"><span class="mark" aria-hidden="true">✗</span> One symbol such as ! @ # $ <span class="state">(Needed)</span></li>
+        </ul>
+        <!-- Visual strength meter; the same count is announced through #pwStatus -->
+        <div class="pw-meter" id="pwMeter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="sr-only" id="pwStatus" aria-live="polite"></p>
+        <p class="field-error" id="password_err" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label for="confirm">Confirm practice password <span class="req">(required)</span></label>
+        <input id="confirm" name="confirm" type="password" autocomplete="new-password"
+               required maxlength="128" aria-describedby="confirm_err">
+        <p class="field-error" id="confirm_err" aria-live="polite"></p>
+      </div>
+
+      <div class="nav">
+        <button type="button" data-back>← Back</button>
+        <button type="button" data-next>Next: Profile →</button>
+        <button type="button" class="return-review" data-return hidden>Save and return to review</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: PROFILE -->
+    <section class="step" data-step="3" aria-labelledby="h-profile">
+      <h2 id="h-profile" tabindex="-1">Profile</h2>
+
+      <fieldset class="field" id="tierGroup" aria-describedby="tier_err">
+        <legend>Membership tier <span class="req">(required)</span></legend>
+        <label class="inline tier-card"><input type="radio" id="tier_basic" name="tier" aria-describedby="tier_err" value="Basic ($25)" required> Basic ($25)</label>
+        <label class="inline tier-card"><input type="radio" id="tier_standard" name="tier" aria-describedby="tier_err" value="Standard ($50)"> Standard ($50)</label>
+        <label class="inline tier-card"><input type="radio" id="tier_deluxe" name="tier" aria-describedby="tier_err" value="Deluxe ($100)"> Deluxe ($100)</label>
+        <p class="field-error" id="tier_err" aria-live="polite"></p>
+      </fieldset>
+
+      <div class="field">
+        <label for="interests">Interests <span class="req">(choose 1 to 3, required)</span></label>
+        <p class="hint" id="interests_hint">Hold Ctrl (Cmd on Mac) to pick more than one. With the keyboard: Shift + arrow keys.</p>
+        <select id="interests" name="interests" multiple size="6" required
+                aria-describedby="interests_hint interests_count interests_err">
+          <option>Robotics</option>
+          <option>Debate</option>
+          <option>Photography</option>
+          <option>Gaming</option>
+          <option>Hiking</option>
+          <option>Music</option>
+        </select>
+        <p class="hint" id="interests_count">0 of 3 selected</p>
+        <p class="field-error" id="interests_err" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label for="bio">Bio <span class="opt">(optional, up to 140 characters)</span></label>
+        <textarea id="bio" name="bio" rows="3" maxlength="140" aria-describedby="bioCount bio_err"></textarea>
+        <div class="bio-bar" aria-hidden="true"><span id="bioFill"></span></div>
+        <p class="hint" id="bioCount">140 characters left</p>
+        <p class="field-error" id="bio_err" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label class="inline"><input id="terms" type="checkbox" name="terms" required aria-describedby="terms_err"> I accept the club terms <span class="req">(required)</span></label>
+        <p class="field-error" id="terms_err" aria-live="polite"></p>
+      </div>
+
+      <div class="nav">
+        <button type="button" data-back>← Back</button>
+        <button type="button" data-next>Review →</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: REVIEW -->
+    <section class="step" data-step="4" aria-labelledby="h-review">
+      <h2 id="h-review" tabindex="-1">Review</h2>
+      <p>Check your answers. Submitting runs every rule again.</p>
+      <div id="reviewSummary"></div>
+      <div class="nav">
+        <button type="button" data-back>← Back</button>
+        <button type="submit">Submit registration</button>
+      </div>
+    </section>
+  </form>
+
+  <p id="projectStatus" role="status"></p>
+  <!-- Decorative success badge; the role="status" text above carries the message -->
+  <div id="successCard" class="success-card" aria-hidden="true" hidden>
+    <svg viewBox="0 0 52 52" class="check-svg"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg>
+    <p class="success-title">Welcome to the club, <span id="successName"></span>!</p>
+    <p class="success-sub">Practice registration complete. Nothing was sent or saved.</p>
+  </div>
+</main>
+
+<script src="validator.js"></script>
+</body>
+</html>
